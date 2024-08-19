@@ -1,0 +1,65 @@
+#include <Servo.h>
+Servo miServo; //objeto Servo
+
+const int trigPin = 9; // Pin digital 9 para el pin TRIG del sensor
+const int echoPin = 10; // Pin digital 10 para el pin ECHO del sensor
+
+long duration;
+int distance;
+
+void setup() {
+  // Configura los pines de entrada y salida
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(13, OUTPUT);
+  miServo.attach(6); // Asigna el servomotor al pin 9 del Arduino
+  // Inicia la comunicación serie
+  Serial.begin(9600);
+  digitalWrite(13,HIGH);
+}
+
+void loop() {
+  // Asegúrate de que el pin TRIG esté limpio
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  
+  // Enviar un pulso de 10us para disparar el sensor
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  // Leer el tiempo que toma el pulso en llegar de vuelta
+  duration = pulseIn(echoPin, HIGH);
+  
+  // Calcular la distancia (duración / 2) * velocidad del sonido
+  distance = duration * 0.034 / 2;
+  if (distance <= 10){     
+    Serial.println("******Activar tacho******");
+    Serial.print("Distancia: ");
+    Serial.print(distance);
+    Serial.println(" cm"); 
+    digitalWrite(13,HIGH);
+    /*for (int ang = 0; ang <= 110; ang += 1) { 
+      delay(8);
+      miServo.write(ang);              // Indica al servomotor que se mueva a la posición 'pos'
+    }*/
+    miServo.write(110);              // Indica al servomotor que se mueva a la posición 'pos'
+    delay(3000);
+    miServo.write(0);
+    /*              // Indica al servomotor que se mueva a la posición 'pos'
+    for (int ang = 110; ang >= 0; ang -= 1) { 
+      delay(8);                       // Espera 15 ms para que el servo alcance la posición
+      miServo.write(ang);              // Indica al servomotor que se mueva a la posición 'pos'
+    }*/
+  }
+
+  else{
+    Serial.print("Distancia: ");
+    Serial.print(distance);
+    Serial.println(" cm");  
+    digitalWrite(13, LOW);
+  }
+
+  // Pausa antes de la próxima lectura
+//  delay(1000);
+}
