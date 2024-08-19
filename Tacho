@@ -1,5 +1,9 @@
-#include <Servo.h>
-Servo miServo; //objeto Servo
+/***Colegio Jose Abelardo Quiñones****/
+//Seccion: 4C
+
+#include <Servo.h> // Incluye la biblioteca Servo.h
+
+Servo miServo; // Crea un objeto Servo
 
 const int trigPin = 9; // Pin digital 9 para el pin TRIG del sensor
 const int echoPin = 10; // Pin digital 10 para el pin ECHO del sensor
@@ -12,10 +16,11 @@ void setup() {
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   pinMode(13, OUTPUT);
-  miServo.attach(6); // Asigna el servomotor al pin 9 del Arduino
-  // Inicia la comunicación serie
+  miServo.attach(6); // Asigna el servomotor al pin 6 del Arduino
+  // Inicia la comunicación serial
   Serial.begin(9600);
   digitalWrite(13,HIGH);
+  miServo.write(0);
 }
 
 void loop() {
@@ -39,18 +44,18 @@ void loop() {
     Serial.print(distance);
     Serial.println(" cm"); 
     digitalWrite(13,HIGH);
-    /*for (int ang = 0; ang <= 110; ang += 1) { 
-      delay(8);
-      miServo.write(ang);              // Indica al servomotor que se mueva a la posición 'pos'
-    }*/
-    miServo.write(110);              // Indica al servomotor que se mueva a la posición 'pos'
+
+    for (int ang = 0; ang <= 115; ang += 1) { 
+      delay(5);                        // Espera 5 ms para que el servo alcance la posición
+      miServo.write(ang);              // Indica al servomotor que se mueva a cierto angulo
+    }
+
     delay(3000);
-    miServo.write(0);
-    /*              // Indica al servomotor que se mueva a la posición 'pos'
-    for (int ang = 110; ang >= 0; ang -= 1) { 
-      delay(8);                       // Espera 15 ms para que el servo alcance la posición
-      miServo.write(ang);              // Indica al servomotor que se mueva a la posición 'pos'
-    }*/
+
+    for (int ang = 115; ang >= 0; ang -= 1) { 
+      delay(5);                        // Espera 5 ms para que el servo alcance la posición
+      miServo.write(ang);              // Indica al servomotor que se mueva a cierto angulo
+    }
   }
 
   else{
@@ -61,5 +66,5 @@ void loop() {
   }
 
   // Pausa antes de la próxima lectura
-//  delay(1000);
+  delay(50);
 }
